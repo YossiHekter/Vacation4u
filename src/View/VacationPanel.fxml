@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox prefHeight="650.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.VacationPanelController">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+            <TableView fx:id="table" prefHeight="611.0" prefWidth="1280.0" />
+            <Hyperlink fx:id="hl_home" layoutX="119.0" layoutY="611.0" onAction="#goHome" text="I want to Login\Sign Up" />
+            <TextField fx:id="tf_idx" layoutX="956.0" layoutY="610.0" onKeyReleased="#onKeyReleasedBuy" prefHeight="25.0" prefWidth="84.0" />
+            <Button fx:id="btn_buy" disable="true" layoutX="1052.0" layoutY="610.0" mnemonicParsing="false" onAction="#buyFunction" text="Buy" />
+            <Text layoutX="828.0" layoutY="627.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Vacation Index:" />
+            <Text layoutX="390.0" layoutY="627.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter vacation destination:" />
+            <TextField fx:id="tf_dest" layoutX="541.0" layoutY="610.0" onKeyReleased="#onKeyReleasedSearch" prefHeight="25.0" prefWidth="90.0" />
+            <Button fx:id="btn_search" disable="true" layoutX="639.0" layoutY="610.0" mnemonicParsing="false" onAction="#searchFunction" text="Search" />
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>

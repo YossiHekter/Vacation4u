@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.RUDController">
+  <children>
+    <MenuBar fx:id="menu" VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="User Options">
+          <items>
+            <MenuItem fx:id="btn_edit" mnemonicParsing="false" onAction="#EditProfile" text="Edit Profile" />
+            <MenuItem fx:id="btn_search" mnemonicParsing="false" onAction="#SearchFunction" text="Search" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="btn_delete" mnemonicParsing="false" onAction="#DeleteUser" text="Delete Profile" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="btn_sign_out" mnemonicParsing="false" onAction="#sign_out" text="Sign out" />
+          </items>
+        </Menu>
+            <Menu mnemonicParsing="false" text="Vacation Options">
+               <items>
+                  <MenuItem fx:id="viewPanel_btn" mnemonicParsing="false" onAction="#OpenVacationPanel" text="Show Panel" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="createVacation_btn" mnemonicParsing="false" onAction="#OpenNewVacation" text="Create" />
+                  <MenuItem fx:id="deleteVacation_btn" mnemonicParsing="false" onAction="#OpenDeleteVacation" text="Delete" />
+               </items>
+            </Menu>
+      </menus>
+    </MenuBar>
+      <HBox prefHeight="375.0" prefWidth="640.0">
+         <children>
+            <AnchorPane prefHeight="375.0" prefWidth="106.0">
+               <children>
+                  <ImageView fx:id="photo_img" fitHeight="161.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="-0.0" />
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </AnchorPane>
+            <AnchorPane prefHeight="254.0" prefWidth="309.0">
+               <children>
+                  <ImageView fx:id="iv_about" fitHeight="375.0" fitWidth="572.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+  </children>
+</VBox>
