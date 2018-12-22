@@ -2,6 +2,7 @@ package Controller;
 
 import Model.IModel;
 import Model.Model;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,7 +10,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -29,6 +29,8 @@ public class RUDController implements Observer{
     private VacationPanelController vacationPanelController;
     private VacationCreateController vacationCreateController;
     private VacationDeleteController vacationDeleteController;
+    private MyRequestController myRequestController;
+    private TransactionController transactionController;
 
     public javafx.scene.control.MenuBar menu;
     public javafx.scene.image.ImageView iv_about;
@@ -50,8 +52,12 @@ public class RUDController implements Observer{
                 Image user_img = new Image(is);
                 photo_img.setImage(user_img);
                 is.close();
+            }else {
+                InputStream is = new FileInputStream("Resources/emptyUser.jpg");
+                Image user_img = new Image(is);
+                photo_img.setImage(user_img);
+                is.close();
             }
-
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -205,7 +211,7 @@ public class RUDController implements Observer{
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Vacation4U App");
-            stage.setScene(new Scene(root, 1280, 650));
+            stage.setScene(new Scene(root, 1350, 650));
             root.setStyle("-fx-background-color: white");
             stage.setResizable(true);
 
@@ -220,6 +226,35 @@ public class RUDController implements Observer{
             }
             vacationPanelController.setModel(model);
             vacationPanelController.set();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException e) {
+
+        }
+    }
+
+    public void showMyRequests() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            Parent root = fxmlLoader.load(getClass().getResource("/View/MyRequest.fxml").openStream());
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("My requests");
+            stage.setScene(new Scene(root, 580, 650));
+            root.setStyle("-fx-background-color: white");
+            stage.setResizable(true);
+
+            if(myRequestController == null){
+                myRequestController = fxmlLoader.getController();
+                ((Model)model).addObserver(myRequestController);
+            }
+            else {
+                ((Model)model).deleteObserver(myRequestController);
+                myRequestController = fxmlLoader.getController();
+                ((Model)model).addObserver(myRequestController);
+            }
+            myRequestController.setModel(model);
+            myRequestController.set();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
         } catch (IOException e) {
@@ -287,6 +322,37 @@ public class RUDController implements Observer{
 
         }
     }
+
+    public void showMyTransactions(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            Parent root = fxmlLoader.load(getClass().getResource("/View/MyTransactions.fxml").openStream());
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Vacation4U - My Transactions");
+            stage.setScene(new Scene(root, 750, 500));
+            root.setStyle("-fx-background-color: white");
+            stage.setResizable(true);
+
+            //-------
+            if(transactionController == null){
+                transactionController = fxmlLoader.getController();
+                ((Model)model).addObserver(transactionController);
+            }
+            else {
+                ((Model)model).deleteObserver(transactionController);
+                vacationDeleteController = fxmlLoader.getController();
+                ((Model)model).addObserver(transactionController);
+            }
+            transactionController.setModel(model);
+            transactionController.set();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException e) {
+
+        }
+    }
+
 
 
 }

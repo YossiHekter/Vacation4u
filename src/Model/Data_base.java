@@ -10,11 +10,15 @@ import java.util.*;
 public class Data_base {
 
     private String db_Name;
+    private int Request_idx;
     private int Vacation_idx;
+    private int Transaction_idx;
 
     public Data_base(String fileName) {
         db_Name = fileName;
-        Vacation_idx = getLastIDX() + 1;
+        Vacation_idx = getLastIDX("VACATION") + 1;
+        Request_idx = getLastIDX("REQUEST") + 1;
+        Transaction_idx = getLastIDX("PAYMENT") + 1;
         String url = "jdbc:sqlite:" + fileName;
         Connection c = null;
         try {
@@ -26,9 +30,19 @@ public class Data_base {
         }
     }
 
+    public String getRequest_idx(){
+        Request_idx++;
+        return ""+(Request_idx - 1);
+    }
+
     public String getVacation_idx(){
         Vacation_idx++;
         return ""+(Vacation_idx - 1);
+    }
+
+    public String getTransaction_idx(){
+        Transaction_idx++;
+        return ""+(Transaction_idx - 1);
     }
 
     public void createUsersTable() {
@@ -104,10 +118,13 @@ public class Data_base {
             c = DriverManager.getConnection("jdbc:sqlite:" + this.db_Name);
             stmt = c.createStatement();
             String sql = "CREATE TABLE PAYMENT " +
-                    "(Payment_IDX INTEGER PRIMARY KEY UNIQUE NOT NULL," +
+                    "(Payment_IDX VARCHAR(20) PRIMARY KEY UNIQUE NOT NULL," +
                     " User_name_seller VARCHAR(20) NOT NULL, " +
                     " User_name_buyer VARCHAR(20) NOT NULL, " +
-                    " Finel_Price INTEGER NOT NULL)";
+                    " Final_Price INTEGER NOT NULL, "+
+                    " DateOfTransaction VARCHAR(20) NOT NULL, " +
+                    " Request_Type VARCHAR(20) NOT NULL, " +
+                    " Status VARCHAR(20) NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
             c.close();
@@ -135,7 +152,11 @@ public class Data_base {
                         "Vacation_type,Sleep_included,Sleep_rank) VALUES (";
             }
             else if (table == "PAYMENT") {
-                sql = "INSERT INTO PAYMENT (Payment_IDX, User_name_seller, User_name_buyer, Finel_Price) VALUES (";
+                sql = "INSERT INTO PAYMENT (Payment_IDX,User_name_seller,User_name_buyer,Final_Price,DateOfTransaction, " +
+                        "Request_Type,Status) VALUES (";
+            }
+            else if (table == "REQUEST") {
+                sql = "INSERT INTO REQUEST (Request_IDX, Seller_Vac_IDX, Buyer_Vac_IDX, User_name_seller,User_name_buyer,Request_Type) VALUES (";
             }
             for(int i=0;i<values.length-1;i++) {
                 sql += "'" + values[i] + "', ";
@@ -266,6 +287,34 @@ public class Data_base {
             return false;
     }
 
+    public void createRequestTable() {
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:" + this.db_Name);
+            stmt = c.createStatement();
+            String sql = "CREATE TABLE REQUEST " +
+                    "(Request_IDX INTEGER PRIMARY KEY UNIQUE NOT NULL," +
+                    " Seller_Vac_IDX INTEGER NOT NULL, " +
+                    " Buyer_Vac_IDX INTEGER, " +
+                    " User_name_seller VARCHAR(20) NOT NULL, " +
+                    " User_name_buyer VARCHAR(20) NOT NULL, " +
+                    " Request_Type VARCHAR(20) NOT NULL)"; // buy or exchange
+            stmt.executeUpdate(sql);
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            try {
+                c.close();
+                stmt.close();
+            } catch (SQLException e1) {
+
+            }
+        }
+    }
+
+
     public ArrayList<Fly> getVacations(){
         Connection c = null;
         PreparedStatement stmt = null;
@@ -320,8 +369,61 @@ public class Data_base {
         return ans;
     }
 
+    public ArrayList<Request> getMyRequests(String user_name){
+        ArrayList<Request> list = this.getRequests();
+        ArrayList<Request> ans = new ArrayList<Request>();
+        for(Request req : list){
+            if (req.getSeller().equals(user_name))
+                ans.add(req);
+        }
+        return ans;
+    }
 
-    public int getLastIDX(){
+    public ArrayList<Request> getAllRequests(){
+        return this.getRequests();
+    }
+
+    public ArrayList<Request> getRequests(){
+        Connection c = null;
+        PreparedStatement stmt = null;
+        ArrayList<Request> ans = new ArrayList<Request>();
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:" + this.db_Name);
+            c.setAutoCommit(false);
+
+            String sql = "SELECT * FROM REQUEST;";
+            stmt = c.prepareStatement(sql);
+
+            // set the value
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                String request_Index = rs.getString("Request_IDX");
+                String seller_vacation_Index = rs.getString("Seller_Vac_IDX");
+                String buyer_vacation_Index = rs.getString("Buyer_Vac_IDX");
+                String user_name = rs.getString("User_name_seller");
+                String buyer = rs.getString("User_name_buyer");
+                String type = rs.getString("Request_Type");
+
+
+                Request req = new Request(request_Index, seller_vacation_Index, buyer_vacation_Index, user_name,
+                        buyer, type);
+                ans.add(req);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+
+        }
+        return ans;
+    }
+
+    public boolean addToRequestsTable(String request, String vacation_idx, String otherUsr_vacatinIDX, String exchangeMe) {
+        return false;
+    }
+
+    public int getLastIDX(String tableName){
         Connection c = null;
         Statement stmt = null;
         int max = 0;
@@ -329,16 +431,36 @@ public class Data_base {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:" + this.db_Name);
             c.setAutoCommit(false);
-
-            String sql = "SELECT * FROM VACATION;";
+            String sql;
+            if(tableName.equals("VACATION"))
+                sql = "SELECT * FROM VACATION;";
+            else if(tableName.equals("REQUEST"))
+                sql = "SELECT * FROM REQUEST;";
+            else
+                sql =  "SELECT * FROM PAYMENT;";
             stmt = c.createStatement();
 
             ResultSet rs = stmt.executeQuery(sql);
 
-            while (rs.next()) {
-                int Vacation_IDX = Integer.parseInt(rs.getString("Vacation_IDX"));
-                if (Vacation_IDX>max)
-                    max = Vacation_IDX;
+            if(tableName.equals("VACATION")) {
+                while (rs.next()) {
+                    int Vacation_IDX = Integer.parseInt(rs.getString("Vacation_IDX"));
+                    if (Vacation_IDX > max)
+                        max = Vacation_IDX;
+                }
+            }
+            else if(tableName.equals("REQUEST")){
+                while (rs.next()) {
+                    int Request_IDX = Integer.parseInt(rs.getString("Request_IDX"));
+                    if (Request_IDX > max)
+                        max = Request_IDX;
+                }
+            }else{
+                while (rs.next()) {
+                    int Request_IDX = Integer.parseInt(rs.getString("Payment_IDX"));
+                    if (Request_IDX > max)
+                        max = Request_IDX;
+                }
             }
             rs.close();
             stmt.close();
@@ -349,5 +471,57 @@ public class Data_base {
             //System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return max;
+    }
+
+    public ArrayList<Payment> getMyTransactions(String user_name) {
+        ArrayList<Payment> list = this.getPayments();
+        ArrayList<Payment> ans = new ArrayList<Payment>();
+        for(Payment payment : list){
+            if (payment.getSeller().equals(user_name))
+                ans.add(payment);
+        }
+        return ans;
+
+    }
+
+    private ArrayList<Payment> getPayments() {
+        Connection c = null;
+        PreparedStatement stmt = null;
+        ArrayList<Payment> ans = new ArrayList<>();
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:" + this.db_Name);
+            c.setAutoCommit(false);
+
+            String sql = "SELECT * FROM PAYMENT;";
+            stmt = c.prepareStatement(sql);
+
+            // set the value
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                String payment_idx = rs.getString("Payment_IDX");
+                String user_name_seller = rs.getString("User_name_seller");
+                String user_name_buyer = rs.getString("User_name_buyer");
+                String price = rs.getString("Final_Price");
+                String dateOfTransaction = rs.getString("DateOfTransaction");
+                String request_type = rs.getString("Request_Type");
+                String status = rs.getString("status");
+
+                Payment payment = new Payment(payment_idx, user_name_seller, user_name_buyer,price, dateOfTransaction,
+                        request_type, status);
+                ans.add(payment);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+
+        }
+        return ans;
+
+    }
+
+    public void updateStatus(String status){
+
     }
 }

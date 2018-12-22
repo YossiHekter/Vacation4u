@@ -1,12 +1,9 @@
 package Model;
 
-import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import java.util.Iterator;
 import java.util.Observable;
 
 public class Model extends Observable implements IModel {
@@ -19,6 +16,7 @@ public class Model extends Observable implements IModel {
         db.createUsersTable();
         db.createVacationTable();
         db.createPaymentTable();
+        db.createRequestTable();
     }
 
     @Override
@@ -36,6 +34,25 @@ public class Model extends Observable implements IModel {
             notifyObservers(args);
         }
 
+    }
+
+    public ArrayList<Payment> getMyTransactions() {
+        ArrayList<Payment> ans = new ArrayList<>();
+        ans = db.getMyTransactions(this.user_name);
+        return ans;
+    }
+
+    public void exchangeVacation(String otherUsr_VacatinIDX,String exchangeMe){
+        if(db.addToRequestsTable("REQUEST","Vacation_IDX",otherUsr_VacatinIDX,exchangeMe)) {
+            Object[] args = {"vacation added"};
+            setChanged();
+            notifyObservers(args);
+        }
+        else{
+            Object[] args = {"add vacation failed"};
+            setChanged();
+            notifyObservers(args);
+        }
     }
 
     @Override
@@ -148,7 +165,7 @@ public class Model extends Observable implements IModel {
     public void makePayment(String[] values){
         if(db.Insert("PAYMENT", values)) {
             Object[] args = {"make payment succeeded"};
-            db.Delete("VACATION","Vacation_IDX",values[0]);
+            //db.Delete("VACATION","Vacation_IDX",values[0]);
             setChanged();
             notifyObservers(args);
         }
@@ -162,6 +179,11 @@ public class Model extends Observable implements IModel {
     @Override
     public String getVacation_idx() {
         return db.getVacation_idx();
+    }
+
+    @Override
+    public String getTransaction_idx() {
+        return db.getTransaction_idx();
     }
 
     @Override
@@ -179,6 +201,34 @@ public class Model extends Observable implements IModel {
     }
 
     @Override
+    public ArrayList<Request> getMyRequests(){
+        ArrayList<Request> ans = new ArrayList<Request>();
+        ans = db.getMyRequests(this.user_name);
+        return ans;
+    }
+
+    @Override
+    public ArrayList<Request> getAllRequests(){
+        ArrayList<Request> ans = new ArrayList<Request>();
+        ans = db.getAllRequests();
+        return ans;
+    }
+
+    @Override
+    public void addToRequestDB(String[] values) {
+        if(db.Insert("REQUEST",values)) {
+            Object[] args = {"vacation added"};
+            setChanged();
+            notifyObservers(args);
+        }
+        else{
+            Object[] args = {"add vacation failed"};
+            setChanged();
+            notifyObservers(args);
+        }
+    }
+
+    @Override
     public void deleteVacation(String deleteMe) {
         if(db.Delete("VACATION","Vacation_IDX",deleteMe)) {
             Object[] args = {"vacation deleted"};
@@ -190,6 +240,41 @@ public class Model extends Observable implements IModel {
             setChanged();
             notifyObservers(args);
         }
+    }
+
+    @Override
+    public void deleteRequest(String deleteMe){
+        if(db.Delete("REQUEST","Request_IDX",deleteMe)) {
+            Object[] args = {"vacation deleted"};
+            setChanged();
+            notifyObservers(args);
+        }
+        else{
+            Object[] args = {"delete vacation failed"};
+            setChanged();
+            notifyObservers(args);
+        }
+    }
+    @Override
+    public Fly getVacationByIndex(int index){
+        Fly flight = null;
+        ArrayList<Fly> list = getVacation();
+        Iterator it = list.iterator();
+        while (it.hasNext()) {
+            Fly f = (Fly) it.next();
+            if (Integer.parseInt(f.getVacation_Index()) == index) {
+                flight = f;
+                break;
+            }
+        }
+        return flight;
+    }
+    public String getRequest_idx() {
+        return db.getRequest_idx();
+    }
+
+    public void updateStatus(String status){
+        db.updateStatus(status);
     }
 
 }

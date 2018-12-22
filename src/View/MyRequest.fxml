@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox prefHeight="500.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MyRequestController">
+    <children>
+        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+            <children>
+                <TableView fx:id="table" prefHeight="570.0" prefWidth="590.0" />
+                <TextField fx:id="txt_idxOfVacation" layoutX="200.0" layoutY="612.0" prefHeight="25.0" prefWidth="57.0" />
+                <Button fx:id="btn_choose" layoutX="280.0" layoutY="612.0" mnemonicParsing="false" onAction="#chooseVacation" text="Show details" />
+                <Text layoutX="80.0" layoutY="629.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Request Index:" />
+            </children>
+        </AnchorPane>
+    </children>
+</VBox>

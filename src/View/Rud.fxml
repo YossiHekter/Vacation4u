@@ -30,6 +30,9 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="createVacation_btn" mnemonicParsing="false" onAction="#OpenNewVacation" text="Create" />
                   <MenuItem fx:id="deleteVacation_btn" mnemonicParsing="false" onAction="#OpenDeleteVacation" text="Delete" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="viewPanel_btn1" mnemonicParsing="false" onAction="#showMyRequests" text="Show Requests" />
+                  <MenuItem fx:id="viewPanel_btn11" mnemonicParsing="false" onAction="#showMyTransactions" text="Show Transactions" />
                </items>
             </Menu>
       </menus>

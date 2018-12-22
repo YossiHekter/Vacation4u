@@ -12,13 +12,13 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Main extends Application implements Initializable {
+public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         Model model = new Model();
         //--------------
-        primaryStage.setTitle("Vication4U");
+        primaryStage.setTitle("Vacation4U");
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = fxmlLoader.load(getClass().getResource("sample.fxml").openStream());
         Scene scene = new Scene(root, 600, 450);
@@ -35,10 +35,5 @@ public class Main extends Application implements Initializable {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public void initialize(URL location, ResourceBundle resources) {
-        Image logo = new Image(Main.class.getClassLoader().getResourceAsStream("logo.jpeg"));
-        //img_logo.setImage(logo);
     }
 }
