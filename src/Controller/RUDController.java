@@ -341,7 +341,7 @@ public class RUDController implements Observer{
             }
             else {
                 ((Model)model).deleteObserver(transactionController);
-                vacationDeleteController = fxmlLoader.getController();
+                transactionController = fxmlLoader.getController();
                 ((Model)model).addObserver(transactionController);
             }
             transactionController.setModel(model);

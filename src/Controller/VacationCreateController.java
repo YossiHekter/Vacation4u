@@ -70,7 +70,7 @@ public class VacationCreateController implements Observer {
     }
 
     public void createVacation () {
-        boolean flag = false;
+        boolean flag = true;
         //check if all the fields are ok
         if(CheckValidity()) {
             String[] values = {model.getVacation_idx(), model.getUser_name(), txt_from.getText().toUpperCase(), txt_to.getText().toUpperCase(),
@@ -81,13 +81,13 @@ public class VacationCreateController implements Observer {
 
             if (cbox_twoWay.isSelected()) {
                 if (DatesValid()) {
-                    flag = true;
                     values[5] = date_return.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     values[11] = "1";
 
                     if (cbox_roomIncluded.isSelected())
                         values[13] = "1";
-                }
+                }else
+                    flag = false;
             }
             if (flag)
                 model.createVacation(values);

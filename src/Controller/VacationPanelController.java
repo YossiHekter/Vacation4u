@@ -413,7 +413,9 @@ public class VacationPanelController implements Observer  {
             ArrayList<Request> requests = model.getAllRequests();
             for( Request req : requests) {
                 if (tf_idx.getText().equals(req.getSeller_vacation_Index())
-                & model.getUser_name().equals(req.getBuyer())) {
+                && model.getUser_name().equals(req.getBuyer())&&
+                        ((req.getType().equals("buy")&& rb_request.isSelected()) ||
+                        (req.getType().equals("exchange"))&& !rb_request.isSelected())) {
                     hasSameRequest = true;
                 }
             }
