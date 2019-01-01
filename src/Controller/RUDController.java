@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
@@ -31,11 +32,13 @@ public class RUDController implements Observer{
     private VacationDeleteController vacationDeleteController;
     private MyRequestController myRequestController;
     private TransactionController transactionController;
+    private int numOfTrans;
 
     public javafx.scene.control.MenuBar menu;
     public javafx.scene.image.ImageView iv_about;
     public javafx.scene.image.ImageView photo_img;
-
+    public Button new_req_btn;
+    public Button new_trans_btn;
 
     public void setModel(IModel model) { this.model = model; }
 
@@ -53,7 +56,7 @@ public class RUDController implements Observer{
                 photo_img.setImage(user_img);
                 is.close();
             }else {
-                InputStream is = new FileInputStream("Resources/emptyUser.jpg");
+                InputStream is = new FileInputStream("Resources/users_photo/emptyUser.jpg");
                 Image user_img = new Image(is);
                 photo_img.setImage(user_img);
                 is.close();
@@ -62,11 +65,21 @@ public class RUDController implements Observer{
         }catch (Exception e) {
             e.printStackTrace();
         }
+        new_req_btn.setDisable(true);
+        if(model.getMyRequests()!=null)
+            new_req_btn.setDisable(false);
+
+        new_trans_btn.setDisable(true);
+        if(model.getMyTransactions()!=null)
+            new_trans_btn.setDisable(false);
     }
 
     public void setUser_name(String user_name){ model.setUser_name(user_name); }
 
-    public void setController(Controller controller){ this.controller = controller; }
+    public void setController(Controller controller){
+        this.controller = controller;
+
+    }
 
     public void EditProfile() {
         try {
@@ -78,7 +91,6 @@ public class RUDController implements Observer{
             root.setStyle("-fx-background-color: white");
             Scene scene = new Scene(root, 600, 500);
             stage.setScene(scene);
-
             //loading the controllers of the new stage:
             if(updateController == null){
                 updateController = fxmlLoader.getController();
@@ -112,7 +124,6 @@ public class RUDController implements Observer{
             root.setStyle("-fx-background-color: white");
             Scene scene = new Scene(root, 500, 180);
             stage.setScene(scene);
-
             //loading the controllers of the new stage:
             if(readController == null){
                 readController = fxmlLoader.getController();
@@ -323,7 +334,7 @@ public class RUDController implements Observer{
         }
     }
 
-    public void showMyTransactions(ActionEvent actionEvent) {
+    public void showMyTransactions() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             Parent root = fxmlLoader.load(getClass().getResource("/View/MyTransactions.fxml").openStream());
@@ -353,6 +364,14 @@ public class RUDController implements Observer{
         }
     }
 
+    public void NewRequest(){
+        this.showMyRequests();
+        new_req_btn.setDisable(true);
+    }
 
+    public void NewTrans(){
+        this.showMyTransactions();
+        new_trans_btn.setDisable(true);
+    }
 
 }

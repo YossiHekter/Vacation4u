@@ -477,7 +477,8 @@ public class Data_base {
         ArrayList<Payment> list = this.getPayments();
         ArrayList<Payment> ans = new ArrayList<Payment>();
         for(Payment payment : list){
-            if (payment.getSeller().equals(user_name))
+            if (payment.getSeller().equals(user_name) ||
+                    (payment.getBuyer().equals(user_name) && payment.getType().equals("buy")))
                 ans.add(payment);
         }
         return ans;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -42,6 +43,8 @@
             <AnchorPane prefHeight="375.0" prefWidth="106.0">
                <children>
                   <ImageView fx:id="photo_img" fitHeight="161.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="-0.0" />
+                  <Button fx:id="new_req_btn" layoutX="19.0" layoutY="188.0" mnemonicParsing="false" onAction="#NewRequest" prefHeight="25.0" prefWidth="113.0" text="New Requests" textFill="#da0101" />
+                  <Button fx:id="new_trans_btn" layoutX="19.0" layoutY="224.0" mnemonicParsing="false" onAction="#NewTrans" text="New Transactions " textFill="#da0101" />
                </children>
                <HBox.margin>
                   <Insets />

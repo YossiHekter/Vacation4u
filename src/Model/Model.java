@@ -1,8 +1,11 @@
 package Model;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Observable;
 
@@ -70,6 +73,54 @@ public class Model extends Observable implements IModel {
     }
 
     @Override
+    public boolean legalUserName(String userName){
+        boolean ans = false;
+
+        return ans;
+    }
+
+    @Override
+    public boolean legalPassword(String userPassword){
+        boolean ans = false;
+        boolean num = false;
+        boolean upper = false;
+        if (userPassword.length() < 8)
+            ans = false;
+        else{
+            for (int i=0;i<userPassword.length();i++){
+                char c = userPassword.charAt(i);
+                if (!num && Character.isDigit(c))
+                    num = true;
+                else if (!upper && Character.isUpperCase(c))
+                    upper = true;
+            }
+        }
+        if (num && upper)
+            ans = true;
+        return ans;
+    }
+
+    @Override
+    public boolean legalUserBirthday(LocalDate userBirthday){
+        boolean ans = false;
+        int age = 0;
+        if (userBirthday != null) {
+            age =  Period.between(userBirthday, LocalDate.now()).getYears();
+            if (age >= 18)
+                ans = true;
+        }
+        return ans;
+    }
+
+    @Override
+    public boolean legalVacationDate(LocalDate vacationDate){
+        boolean ans = false;
+        if (vacationDate != null)
+            ans = vacationDate.isAfter(LocalDate.now());
+        return ans;
+    }
+
+    @Override
     public void search(String userToSearch) {
         ArrayList<String[]> select = db.Read("USERS","User_name", userToSearch);
         Object[] args = {"read", select};
@@ -82,10 +133,13 @@ public class Model extends Observable implements IModel {
         String url = get_photo(userName);
         if (!url.equals("")){
             File f = new File(url);
-            System.out.println(f.delete());
+            f.delete();
         }
 
         db.Delete("USERS","User_name",userName);
+        db.Delete("VACATION","User_name",userName);
+        db.Delete("PAYMENT","User_name_seller",userName);
+        db.Delete("PAYMENT","User_name_buyer",userName);
         //notify to the RUD Controller that the user deleted so the user
         //will exit to the main menu
         setChanged();

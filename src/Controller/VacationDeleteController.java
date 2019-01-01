@@ -20,7 +20,7 @@ public class VacationDeleteController implements Observer {
     public TableView<Fly> table;
     public Button btn_delete;
     private IModel model;
-    public javafx.scene.control.TextField txt_idxOfVacation;
+    public ChoiceBox txt_idxOfVacation;
 
     @Override
     public void update(Observable o, Object arg) {
@@ -36,7 +36,7 @@ public class VacationDeleteController implements Observer {
     }
 
     public void deleteVacation() {
-        String deleteMe = txt_idxOfVacation.getText();
+        String deleteMe = (""+txt_idxOfVacation.getValue());
 
         //if the user wrote something:
         if((deleteMe != null) && (!deleteMe.equals("") && onList(deleteMe))) {
@@ -171,9 +171,20 @@ public class VacationDeleteController implements Observer {
         table.setItems(list);
         // add flights to list
         ArrayList<Fly> flys = model.getVacationToDelete();
+        ArrayList<String> index = new ArrayList<String>();
         for( Fly f : flys){
             list.add(f);
+            index.add(""+f.getVacation_Index());
         }
+
+        if (index.size()>0){
+            txt_idxOfVacation.setItems(FXCollections.observableArrayList(index));
+            txt_idxOfVacation.setValue(index.get(0));
+        }
+        else {
+            txt_idxOfVacation.setItems(FXCollections.observableArrayList(index));
+        }
+
         // enter the cols to the table
         table.getColumns().addAll(vac_idx,user_name,from,to,depart,return_date,flight_company,total_price,num_of_tickets,luggage,ticket_type,vac_type,sleep_included,sleep_rank);
 

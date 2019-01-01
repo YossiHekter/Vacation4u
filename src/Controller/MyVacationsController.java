@@ -21,7 +21,7 @@ public class MyVacationsController implements Observer {
     public TableView<Fly> table;
     public Button btn_exchange;
     private IModel model;
-    public javafx.scene.control.TextField txt_idxOfVacation;
+    public ChoiceBox txt_idxOfVacation;
 
     private String otherUsr_VacationIDX;
     private String otherUsr_Username;
@@ -37,7 +37,7 @@ public class MyVacationsController implements Observer {
     }
 
     public void ExchangeVacation(ActionEvent actionEvent) {
-        String exchangeMeIDX = txt_idxOfVacation.getText();
+        String exchangeMeIDX = (""+txt_idxOfVacation.getValue());
 
         //if the user wrote something:
         if((exchangeMeIDX != null) && (!exchangeMeIDX.equals("") && onList(exchangeMeIDX))) {
@@ -82,7 +82,7 @@ public class MyVacationsController implements Observer {
                 //checking what the user choosed
                 alert.showAndWait().ifPresent((buttonType) -> {
                     if (buttonType == yesButton) {
-                        String[] values = {model.getRequest_idx(), otherUsr_VacationIDX, txt_idxOfVacation.getText(),
+                        String[] values = {model.getRequest_idx(), otherUsr_VacationIDX, (""+txt_idxOfVacation.getValue()),
                                 otherUsr_Username, model.getUser_name(), "exchange"};
                         model.addToRequestDB(values);
 
@@ -220,8 +220,18 @@ public class MyVacationsController implements Observer {
         table.setItems(list);
         // add flights to list
         ArrayList<Fly> flys = model.getVacationToDelete();
+        ArrayList<String> index = new ArrayList<String>();
         for( Fly f : flys){
             list.add(f);
+            index.add(""+f.getVacation_Index());
+        }
+
+        if (index.size()>0){
+            txt_idxOfVacation.setItems(FXCollections.observableArrayList(index));
+            txt_idxOfVacation.setValue(index.get(0));
+        }
+        else {
+            txt_idxOfVacation.setItems(FXCollections.observableArrayList(index));
         }
         // enter the cols to the table
         table.getColumns().addAll(vac_idx,user_name,from,to,depart,return_date,flight_company,total_price,num_of_tickets,luggage,ticket_type,vac_type,sleep_included,sleep_rank);

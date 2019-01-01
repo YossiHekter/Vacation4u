@@ -1,12 +1,16 @@
 package Model;
 
-import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public interface IModel {
 
     void login(String userName , String userPassword);
     void signUp(String[] values);
+    boolean legalUserName(String userName);
+    boolean legalPassword(String userPassword);
+    boolean legalUserBirthday(LocalDate userBirthday);
+    boolean legalVacationDate(LocalDate vacationDate);
     void search(String userName);
     void deleteUser(String userName);
     void updateUserData(String[] updateData);

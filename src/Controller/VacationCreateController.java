@@ -79,23 +79,31 @@ public class VacationCreateController implements Observer {
                     "" + cb_luggage.getValue(), "" + cb_cabinClass.getValue(), "0",
                     "" + cb_vacType.getValue(), "0", "" + (int)((sld_sleepRank.getValue()*5)/100)};
 
-            if (cbox_twoWay.isSelected()) {
+            if (!DatesValid()){
+                flag=false;
+            }
+
+            else if (cbox_twoWay.isSelected()) {
                 if (DatesValid()) {
                     values[5] = date_return.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     values[11] = "1";
-
-                    if (cbox_roomIncluded.isSelected())
-                        values[13] = "1";
-                }else
+                }
+                else
                     flag = false;
             }
+            else if (cbox_roomIncluded.isSelected())
+                values[13] = "1";
             if (flag)
                 model.createVacation(values);
         }
     }
 
     private boolean DatesValid() {
-        if(date_depart.getValue().isAfter(date_return.getValue())) {
+        if (!model.legalVacationDate(date_depart.getValue())){
+            showAlert("Error","Depart date must be in the future!");
+            return false;
+        }
+        else if(cbox_twoWay.isSelected() && date_depart.getValue().isAfter(date_return.getValue())) {
             showAlert("Error","Return date must be after departure date!");
             return false;
         }

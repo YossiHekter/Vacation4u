@@ -64,6 +64,14 @@ public class UpdateController implements Observer{
                     "Please select a different username");
             alert.showAndWait();
         }
+        else if(!model.legalUserBirthday(datePicker_date_of_birth.getValue())){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("User must be over the age of 18");
+            Optional<ButtonType> reasult = alert.showAndWait();
+            if(reasult.get() == ButtonType.OK)
+                alert.close();
+        }
         else {
             String[] data = new String[8];
             data[0] = model.getUser_name();

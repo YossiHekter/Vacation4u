@@ -23,7 +23,7 @@ public class VacationPanelController implements Observer  {
     public ObservableList<Fly> list = FXCollections.observableArrayList();
     public TableView<Fly> table;
     public Hyperlink hl_home;
-    public TextField tf_idx;
+    public ChoiceBox tf_idx;
     public TextField tf_dest;
     public Button btn_go;
     public RadioButton rb_request;
@@ -83,34 +83,13 @@ public class VacationPanelController implements Observer  {
             });
         }
         else {//if it's signed user:
-            if (tf_idx.getText().length() > 0) {
-                if (onList(tf_idx.getText())) {
-                    if (rb_request.isSelected() || rb_switch.isSelected()) {
-                        if (rb_request.isSelected()) {
-                            requestFunction();
-                        }
-                        if (rb_switch.isSelected()) {
-                            Stage prim = (Stage) this.hl_home.getScene().getWindow();
-                            prim.close();
-                            switchFunction();
-                        }
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error");
-                        alert.setHeaderText("You must choose way to pay");
-                        alert.showAndWait();
-                    }
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Chosen Vacation is not exists");
-                    alert.showAndWait();
-                }
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("You must insert index of vacation");
-                alert.showAndWait();
+            if (rb_request.isSelected()) {
+                requestFunction();
+            }
+            if (rb_switch.isSelected()) {
+                Stage prim = (Stage) this.hl_home.getScene().getWindow();
+                prim.close();
+                switchFunction();
             }
 
         }
@@ -142,9 +121,9 @@ public class VacationPanelController implements Observer  {
             myVacationsController.set();
 
             //search for the seller user name
-            String Other_UserName = getUserNameByIndex(tf_idx.getText());
+            String Other_UserName = getUserNameByIndex(""+tf_idx.getValue());
 
-            myVacationsController.setOtherUsr(Other_UserName,tf_idx.getText());
+            myVacationsController.setOtherUsr(Other_UserName,""+tf_idx.getValue());
 
             stage.initModality(Modality.APPLICATION_MODAL); //Lock the window until it closes
             stage.show();
@@ -267,15 +246,29 @@ public class VacationPanelController implements Observer  {
         table.setItems(list);
         String user_name_connect = model.getUser_name();
         ArrayList<Fly> flys = model.getVacation();
+        ArrayList<String> index = new ArrayList<String>();
         for( Fly f : flys){
-            if (user_name_connect.equals(""))
+            if (user_name_connect.equals("")) {
                 list.add(f);
+                index.add(""+f.getVacation_Index());
+
+            }
             else {
                 if (!f.getUser_name().equals(user_name_connect)){
                     list.add(f);
+                    index.add(""+f.getVacation_Index());
                 }
             }
         }
+        if (index.size()>0){
+            tf_idx.setItems(FXCollections.observableArrayList(index));
+            tf_idx.setValue(index.get(0));
+        }
+        else {
+            tf_idx.setItems(FXCollections.observableArrayList(index));
+        }
+
+
         // enter the cols to the table
         table.getColumns().addAll(vac_idx,user_name,from,to,depart,return_date,flight_company,total_price,num_of_tickets,luggage,ticket_type,vac_type,sleep_included,sleep_rank);
         if (!model.getUser_name().equals(""))
@@ -287,10 +280,10 @@ public class VacationPanelController implements Observer  {
         prim.close();
     }
 
-    public void onKeyReleasedBuy(){
-        boolean releasedBuy = (tf_idx.getText().isEmpty());
-        btn_go.setDisable(releasedBuy);
-    }
+    //public void onKeyReleasedBuy(){
+    //    boolean releasedBuy = (tf_idx.getText().isEmpty());
+    //    btn_go.setDisable(releasedBuy);
+    //}
 
     public void onKeyReleasedSearch(){
         boolean releasedSearch = (tf_dest.getText().isEmpty());
@@ -394,25 +387,46 @@ public class VacationPanelController implements Observer  {
         sleep_rank.setCellValueFactory(new PropertyValueFactory<Fly,String>("sleep_rank"));
 
         String dest = tf_dest.getText().toUpperCase();
+        String user_name_connect = model.getUser_name();
         ArrayList<Fly> flys = model.getVacation();
+        ArrayList<String> index = new ArrayList<String>();
         for( Fly f : flys){
-            if (dest.equals(f.getTo()))
-                list.add(f);
+            if (dest.equals(f.getTo())) {
+                if (user_name_connect.equals("")) {
+                    list.add(f);
+                    index.add(""+f.getVacation_Index());
+
+                }
+                else {
+                    if (!f.getUser_name().equals(user_name_connect)){
+                        list.add(f);
+                        index.add(""+f.getVacation_Index());
+                    }
+                }
+            }
         }
         table.setItems(list);
+
+        if (index.size()>0){
+            tf_idx.setItems(FXCollections.observableArrayList(index));
+            tf_idx.setValue(index.get(0));
+        }
+        else {
+            tf_idx.setItems(FXCollections.observableArrayList(index));
+        }
 
         table.getColumns().addAll(vac_idx,user_name,from,to,depart,return_date,flight_company,total_price,num_of_tickets,luggage,ticket_type,vac_type,sleep_included,sleep_rank);
     }
 
 
     public void requestFunction(){
-        if (isNumeric(tf_idx.getText()) && onList(tf_idx.getText())){
+        if (isNumeric(""+tf_idx.getValue()) && onList(""+tf_idx.getValue())){
 
             //check if this user alredy request this vacation
             boolean hasSameRequest = false;
             ArrayList<Request> requests = model.getAllRequests();
             for( Request req : requests) {
-                if (tf_idx.getText().equals(req.getSeller_vacation_Index())
+                if ((""+tf_idx.getValue()).equals(req.getSeller_vacation_Index())
                 && model.getUser_name().equals(req.getBuyer())&&
                         ((req.getType().equals("buy")&& rb_request.isSelected()) ||
                         (req.getType().equals("exchange"))&& !rb_request.isSelected())) {
@@ -427,7 +441,7 @@ public class VacationPanelController implements Observer  {
                 alert.showAndWait();
             }else {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setContentText("Are you sure you want to buy ticket number " + tf_idx.getText() + "?");
+                alert.setContentText("Are you sure you want to buy ticket number " + tf_idx.getValue() + "?");
                 ButtonType yesButton = new ButtonType("Yes!", ButtonBar.ButtonData.YES);
                 ButtonType noButton = new ButtonType("No, Sorry", ButtonBar.ButtonData.NO);
                 alert.getButtonTypes().setAll(yesButton, noButton);
@@ -437,13 +451,13 @@ public class VacationPanelController implements Observer  {
                         prim.close();
                         Fly fly = null;
                         for (Fly f : this.list) {
-                            if (tf_idx.getText().equals(f.getVacation_Index())) {
+                            if ((""+tf_idx.getValue()).equals(f.getVacation_Index())) {
                                 fly = f;
                                 break;
                             }
                         }
-                        String[] values = {model.getRequest_idx(), tf_idx.getText(), "",
-                                getUserNameByIndex(tf_idx.getText()), model.getUser_name(), "buy"};
+                        String[] values = {model.getRequest_idx(), ""+tf_idx.getValue(), "",
+                                getUserNameByIndex(""+tf_idx.getValue()), model.getUser_name(), "buy"};
                         model.addToRequestDB(values);
                     }
                 });

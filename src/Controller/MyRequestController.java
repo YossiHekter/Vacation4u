@@ -11,9 +11,7 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 public class MyRequestController implements Observer {
 
@@ -21,13 +19,13 @@ public class MyRequestController implements Observer {
     public TableView<Request> table;
     public Button btn_choose;
     private IModel model;
-    public javafx.scene.control.TextField txt_idxOfVacation;
+    public ChoiceBox txt_idxOfVacation;
 
     @Override
     public void update(Observable o, Object arg) { }
 
     public void chooseVacation() {
-        String reqIndex = txt_idxOfVacation.getText();
+        String reqIndex = (""+txt_idxOfVacation.getValue());
         boolean exchange = false;
         if((reqIndex != null) && (!reqIndex.equals("") && onList(reqIndex))) {
             Alert alert;
@@ -39,9 +37,8 @@ public class MyRequestController implements Observer {
             for( Request req : requests){
                 if(reqIndex.equals(req.getRequest_Index())){
                     sellerVacIndex = req.getSeller_vacation_Index();
-                }
-                if(reqIndex.equals(req.getRequest_Index())){
                     buyerVacIndex = req.getBuyer_vacation_Index();
+                    break;
                 }
             }
             final String vacationIndex = sellerVacIndex;
@@ -88,8 +85,6 @@ public class MyRequestController implements Observer {
                 ButtonType cancelButton = new ButtonType("cancel", ButtonBar.ButtonData.NO);
                 alert.getButtonTypes().setAll(confirmButton, rejectButton, cancelButton);
 
-
-
             }
             final String buyerVacationIndex = buyerVacIndex;
             final boolean isExchange = exchange;
@@ -117,7 +112,7 @@ public class MyRequestController implements Observer {
                                 "confirm"};
                         model.makePayment(payment);
                         model.deleteRequest(reqIndex);
-                        requestsList.remove(Integer.parseInt(reqIndex)-1);
+                        //requestsList.remove(Integer.parseInt(reqIndex)-1);
 
                         //exchange
                         //add another transaction, now the seller is the buyer
@@ -128,59 +123,43 @@ public class MyRequestController implements Observer {
                             payment[0] = model.getTransaction_idx();
                             payment[1] = prop[0];
                             payment[2] = prop[1];
-                            payment[5] = "exchange";
-                            payment[6] = "confirm";
                             model.makePayment(payment);
-
-                            //delete the buyer vacation from the vacation table
-                            model.deleteVacation(buyerVacationIndex);
                         }
 
                         //reject the other requests of this vacation
                         int listIndex=0;
-                        for (Request req : this.requestsList) {
-                            if (vacationIndex.equals(req.getSeller_vacation_Index())) {
-                                prop = getRequest(req.getRequest_Index());
-                                payment[0] = model.getTransaction_idx();
-                                payment[1] = prop[0];
-                                payment[2] = prop[1];
-                                payment[3] = prop[2];
-                                payment[4] = prop[3];
-                                payment[5] = prop[4];
-                                payment[6] = "rejected";
-                                model.makePayment(payment);
-                                model.deleteRequest(req.getRequest_Index());
-                                requestsList.remove(listIndex);
+                        int listLen = requestsList.size();
+                        for (Request req : requestsList) {
+                            if(!(reqIndex.equals(req.getRequest_Index())))
+                            {
+                                if (vacationIndex.equals(req.getSeller_vacation_Index())||
+                                        (req.getType().equals("exchange")
+                                                && buyerVacationIndex.equals(req.getBuyer_vacation_Index()))) {
+                                    prop = getRequest(req.getRequest_Index());
+                                    payment[0] = model.getTransaction_idx();
+                                    payment[1] = prop[0];
+                                    payment[2] = prop[1];
+                                    payment[3] = prop[2];
+                                    payment[4] = prop[3];
+                                    payment[5] = prop[4];
+                                    payment[6] = "rejected";
+                                    model.makePayment(payment);
+                                    model.deleteRequest(req.getRequest_Index());
+                                    //requestsList.remove(listIndex);
+                                }
                             }
-                            if(requestsList.size()==0)
-                                break;
+
                             listIndex++;
+                            if(listLen==listIndex)
+                                break;
                         }
 
                         //delete the vacation from the vacation table
                         model.deleteVacation(vacationIndex);
 
-                        //delete the other requests of the buyer vacation
-                        listIndex=0;
-                        for (Request req : this.requestsList) {
-                            if (req.getType().equals("exchange")
-                                    && buyerVacationIndex.equals(req.getBuyer_vacation_Index())) {
-                                prop = getRequest(req.getRequest_Index());
-                                payment[0] = model.getTransaction_idx();
-                                payment[1] = prop[0];
-                                payment[2] = prop[1];
-                                payment[3] = prop[2];
-                                payment[4] = prop[3];
-                                payment[5] = prop[4];
-                                payment[6] = "rejected";
-                                model.makePayment(payment);
-                                model.deleteRequest(req.getRequest_Index());
-                                requestsList.remove(listIndex);
-                            }
-                            if(requestsList.size()==0)
-                                break;
-                            listIndex++;
-                        }
+                        //delete the buyer vacation from the vacation table
+                        if (isExchange)
+                            model.deleteVacation(buyerVacationIndex);
                     }
                     Stage prim = (Stage) this.btn_choose.getScene().getWindow();
                     prim.close();
@@ -194,7 +173,6 @@ public class MyRequestController implements Observer {
             alert.setHeaderText("Please select a valid request number from the table");
             alert.showAndWait();
         }
-
     }
 
     private void exitDeletePanel() {
@@ -248,9 +226,19 @@ public class MyRequestController implements Observer {
         table.setItems(requestsList);
 
         // add request to list
+        ArrayList<String> index = new ArrayList<String>();
         ArrayList<Request> requests = model.getMyRequests();
         for( Request req : requests){
             requestsList.add(req);
+            index.add(""+req.getRequest_Index());
+        }
+
+        if (index.size()>0){
+            txt_idxOfVacation.setItems(FXCollections.observableArrayList(index));
+            txt_idxOfVacation.setValue(index.get(0));
+        }
+        else {
+            txt_idxOfVacation.setItems(FXCollections.observableArrayList(index));
         }
 
         // enter the cols to the table
