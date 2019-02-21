@@ -1,9 +1,5 @@
 package Model;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
 
@@ -315,10 +311,10 @@ public class Data_base {
     }
 
 
-    public ArrayList<Fly> getVacations(){
+    public ArrayList<Flight> getVacations(){
         Connection c = null;
         PreparedStatement stmt = null;
-        ArrayList<Fly> ans = new ArrayList<Fly>();
+        ArrayList<Flight> ans = new ArrayList<Flight>();
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:" + this.db_Name);
@@ -344,7 +340,7 @@ public class Data_base {
                 String vacation_type = rs.getString("Vacation_type");
                 String sleep_included = rs.getString("Sleep_included");
                 String sleep_rank = rs.getString("Sleep_rank");
-                Fly fly = new Fly(Vacation_Index, user_name, From, To, Depart, Return_Date,
+                Flight fly = new Flight(Vacation_Index, user_name, From, To, Depart, Return_Date,
                             flight_company, price, num_of_tickets, luggage, ticket_type,
                             vacation_type, sleep_included, sleep_rank);
                 ans.add(fly);
@@ -359,10 +355,10 @@ public class Data_base {
     }
 
 
-    public ArrayList<Fly> getVacationToDelete(String user_name){
-        ArrayList<Fly> list = this.getVacations();
-        ArrayList<Fly> ans = new ArrayList<Fly>();
-        for(Fly fly : list){
+    public ArrayList<Flight> getVacationToDelete(String user_name){
+        ArrayList<Flight> list = this.getVacations();
+        ArrayList<Flight> ans = new ArrayList<Flight>();
+        for(Flight fly : list){
             if (fly.getUser_name().equals(user_name))
                 ans.add(fly);
         }
@@ -419,10 +415,6 @@ public class Data_base {
         return ans;
     }
 
-    public boolean addToRequestsTable(String request, String vacation_idx, String otherUsr_vacatinIDX, String exchangeMe) {
-        return false;
-    }
-
     public int getLastIDX(String tableName){
         Connection c = null;
         Statement stmt = null;
@@ -473,22 +465,22 @@ public class Data_base {
         return max;
     }
 
-    public ArrayList<Payment> getMyTransactions(String user_name) {
-        ArrayList<Payment> list = this.getPayments();
-        ArrayList<Payment> ans = new ArrayList<Payment>();
-        for(Payment payment : list){
-            if (payment.getSeller().equals(user_name) ||
-                    (payment.getBuyer().equals(user_name) && payment.getType().equals("buy")))
-                ans.add(payment);
+    public ArrayList<Transaction> getMyTransactions(String user_name) {
+        ArrayList<Transaction> list = this.getPayments();
+        ArrayList<Transaction> ans = new ArrayList<Transaction>();
+        for(Transaction transaction : list){
+            if (transaction.getSeller().equals(user_name) ||
+                    (transaction.getBuyer().equals(user_name) && transaction.getType().equals("buy")))
+                ans.add(transaction);
         }
         return ans;
 
     }
 
-    private ArrayList<Payment> getPayments() {
+    private ArrayList<Transaction> getPayments() {
         Connection c = null;
         PreparedStatement stmt = null;
-        ArrayList<Payment> ans = new ArrayList<>();
+        ArrayList<Transaction> ans = new ArrayList<>();
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:" + this.db_Name);
@@ -508,9 +500,9 @@ public class Data_base {
                 String request_type = rs.getString("Request_Type");
                 String status = rs.getString("status");
 
-                Payment payment = new Payment(payment_idx, user_name_seller, user_name_buyer,price, dateOfTransaction,
+                Transaction transaction = new Transaction(payment_idx, user_name_seller, user_name_buyer,price, dateOfTransaction,
                         request_type, status);
-                ans.add(payment);
+                ans.add(transaction);
             }
             rs.close();
             stmt.close();
@@ -519,7 +511,6 @@ public class Data_base {
 
         }
         return ans;
-
     }
 
     public void updateStatus(String status){

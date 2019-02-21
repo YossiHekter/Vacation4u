@@ -3,8 +3,6 @@ package Controller;
 import Model.IModel;
 
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
-
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;

@@ -121,12 +121,11 @@ public class Controller implements IController, Observer {
             ImageIO.write(bufferedImage, type, new File("Resources/users_photo/"+txt_new_username.getText()+"."+type));
             photo_path = "Resources/users_photo/"+txt_new_username.getText()+"."+type;
         }
-
         if(!model.legalUserBirthday(date_picker.getValue())){
             showAlert("Error","User must be over the age of 18");
         }
         else if(!model.legalPassword(txt_new_user_password.getText())){
-            showAlert("Error","\n" +
+           showAlert("Error","\n" +
                     "A password must be at least 8 characters\r\n" + "and contain at least one number and a large letter");
         }
         else {

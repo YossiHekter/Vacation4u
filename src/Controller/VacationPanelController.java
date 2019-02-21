@@ -1,11 +1,10 @@
 package Controller;
-import Model.Fly;
 import Model.Request;
 import Model.IModel;
 import Model.Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
+import Model.Flight;
 import java.io.IOException;
 import java.util.*;
 
@@ -20,8 +19,8 @@ import javafx.stage.Stage;
 
 public class VacationPanelController implements Observer  {
 
-    public ObservableList<Fly> list = FXCollections.observableArrayList();
-    public TableView<Fly> table;
+    public ObservableList<Flight> list = FXCollections.observableArrayList();
+    public TableView<Flight> table;
     public Hyperlink hl_home;
     public ChoiceBox tf_idx;
     public TextField tf_dest;
@@ -138,10 +137,10 @@ public class VacationPanelController implements Observer  {
     }
 
     public String getUserNameByIndex(String index) {
-        ArrayList<Fly> list = model.getVacation();
+        ArrayList<Flight> list = model.getVacation();
         Iterator it = list.iterator();
         while (it.hasNext()) {
-            Fly f = (Fly) it.next();
+            Flight f = (Flight) it.next();
             if ((f.getVacation_Index()).equals(index)){
                 return f.getUser_name();
             }
@@ -227,27 +226,27 @@ public class VacationPanelController implements Observer  {
         list = FXCollections.observableArrayList();
 
         //connect between col name and to his values
-        vac_idx.setCellValueFactory(new PropertyValueFactory<Fly,String>("Vacation_Index"));
-        user_name.setCellValueFactory(new PropertyValueFactory<Fly,String>("user_name"));
-        from.setCellValueFactory(new PropertyValueFactory<Fly,String>("from"));
-        to.setCellValueFactory(new PropertyValueFactory<Fly,String>("to"));
-        depart.setCellValueFactory(new PropertyValueFactory<Fly,String>("depart"));
-        return_date.setCellValueFactory(new PropertyValueFactory<Fly,String>("return_date"));
-        flight_company.setCellValueFactory(new PropertyValueFactory<Fly,String>("flight_comp"));
-        total_price.setCellValueFactory(new PropertyValueFactory<Fly,String>("price"));
-        num_of_tickets.setCellValueFactory(new PropertyValueFactory<Fly,String>("num_of_travelers"));
-        luggage.setCellValueFactory(new PropertyValueFactory<Fly,String>("luggage"));
-        ticket_type.setCellValueFactory(new PropertyValueFactory<Fly,String>("cabin_class"));
-        vac_type.setCellValueFactory(new PropertyValueFactory<Fly,String>("vac_type"));
-        sleep_included.setCellValueFactory(new PropertyValueFactory<Fly,String>("sleep_included"));
-        sleep_rank.setCellValueFactory(new PropertyValueFactory<Fly,String>("sleep_rank"));
+        vac_idx.setCellValueFactory(new PropertyValueFactory<Flight,String>("Vacation_Index"));
+        user_name.setCellValueFactory(new PropertyValueFactory<Flight,String>("user_name"));
+        from.setCellValueFactory(new PropertyValueFactory<Flight,String>("from"));
+        to.setCellValueFactory(new PropertyValueFactory<Flight,String>("to"));
+        depart.setCellValueFactory(new PropertyValueFactory<Flight,String>("depart"));
+        return_date.setCellValueFactory(new PropertyValueFactory<Flight,String>("return_date"));
+        flight_company.setCellValueFactory(new PropertyValueFactory<Flight,String>("flight_comp"));
+        total_price.setCellValueFactory(new PropertyValueFactory<Flight,String>("price"));
+        num_of_tickets.setCellValueFactory(new PropertyValueFactory<Flight,String>("num_of_travelers"));
+        luggage.setCellValueFactory(new PropertyValueFactory<Flight,String>("luggage"));
+        ticket_type.setCellValueFactory(new PropertyValueFactory<Flight,String>("cabin_class"));
+        vac_type.setCellValueFactory(new PropertyValueFactory<Flight,String>("vac_type"));
+        sleep_included.setCellValueFactory(new PropertyValueFactory<Flight,String>("sleep_included"));
+        sleep_rank.setCellValueFactory(new PropertyValueFactory<Flight,String>("sleep_rank"));
 
         //connect between the list and the table
         table.setItems(list);
         String user_name_connect = model.getUser_name();
-        ArrayList<Fly> flys = model.getVacation();
+        ArrayList<Flight> flys = model.getVacation();
         ArrayList<String> index = new ArrayList<String>();
-        for( Fly f : flys){
+        for( Flight f : flys){
             if (user_name_connect.equals("")) {
                 list.add(f);
                 index.add(""+f.getVacation_Index());
@@ -371,26 +370,26 @@ public class VacationPanelController implements Observer  {
         list = FXCollections.observableArrayList();
 
         //connect between col name and to his values
-        vac_idx.setCellValueFactory(new PropertyValueFactory<Fly,String>("Vacation_Index"));
-        user_name.setCellValueFactory(new PropertyValueFactory<Fly,String>("user_name"));
-        from.setCellValueFactory(new PropertyValueFactory<Fly,String>("from"));
-        to.setCellValueFactory(new PropertyValueFactory<Fly,String>("to"));
-        depart.setCellValueFactory(new PropertyValueFactory<Fly,String>("depart"));
-        return_date.setCellValueFactory(new PropertyValueFactory<Fly,String>("return_date"));
-        flight_company.setCellValueFactory(new PropertyValueFactory<Fly,String>("flight_comp"));
-        total_price.setCellValueFactory(new PropertyValueFactory<Fly,String>("price"));
-        num_of_tickets.setCellValueFactory(new PropertyValueFactory<Fly,String>("num_of_travelers"));
-        luggage.setCellValueFactory(new PropertyValueFactory<Fly,String>("luggage"));
-        ticket_type.setCellValueFactory(new PropertyValueFactory<Fly,String>("cabin_class"));
-        vac_type.setCellValueFactory(new PropertyValueFactory<Fly,String>("vac_type"));
-        sleep_included.setCellValueFactory(new PropertyValueFactory<Fly,String>("sleep_included"));
-        sleep_rank.setCellValueFactory(new PropertyValueFactory<Fly,String>("sleep_rank"));
+        vac_idx.setCellValueFactory(new PropertyValueFactory<Flight,String>("Vacation_Index"));
+        user_name.setCellValueFactory(new PropertyValueFactory<Flight,String>("user_name"));
+        from.setCellValueFactory(new PropertyValueFactory<Flight,String>("from"));
+        to.setCellValueFactory(new PropertyValueFactory<Flight,String>("to"));
+        depart.setCellValueFactory(new PropertyValueFactory<Flight,String>("depart"));
+        return_date.setCellValueFactory(new PropertyValueFactory<Flight,String>("return_date"));
+        flight_company.setCellValueFactory(new PropertyValueFactory<Flight,String>("flight_comp"));
+        total_price.setCellValueFactory(new PropertyValueFactory<Flight,String>("price"));
+        num_of_tickets.setCellValueFactory(new PropertyValueFactory<Flight,String>("num_of_travelers"));
+        luggage.setCellValueFactory(new PropertyValueFactory<Flight,String>("luggage"));
+        ticket_type.setCellValueFactory(new PropertyValueFactory<Flight,String>("cabin_class"));
+        vac_type.setCellValueFactory(new PropertyValueFactory<Flight,String>("vac_type"));
+        sleep_included.setCellValueFactory(new PropertyValueFactory<Flight,String>("sleep_included"));
+        sleep_rank.setCellValueFactory(new PropertyValueFactory<Flight,String>("sleep_rank"));
 
         String dest = tf_dest.getText().toUpperCase();
         String user_name_connect = model.getUser_name();
-        ArrayList<Fly> flys = model.getVacation();
+        ArrayList<Flight> flys = model.getVacation();
         ArrayList<String> index = new ArrayList<String>();
-        for( Fly f : flys){
+        for( Flight f : flys){
             if (dest.equals(f.getTo())) {
                 if (user_name_connect.equals("")) {
                     list.add(f);
@@ -449,8 +448,8 @@ public class VacationPanelController implements Observer  {
                     if (buttonType == yesButton) {
                         Stage prim = (Stage) this.hl_home.getScene().getWindow();
                         prim.close();
-                        Fly fly = null;
-                        for (Fly f : this.list) {
+                        Flight fly = null;
+                        for (Flight f : this.list) {
                             if ((""+tf_idx.getValue()).equals(f.getVacation_Index())) {
                                 fly = f;
                                 break;
@@ -476,7 +475,7 @@ public class VacationPanelController implements Observer  {
 
     private boolean onList(String text) {
         boolean ans = false;
-        for( Fly f : this.list){
+        for( Flight f : this.list){
             if(text.equals(f.getVacation_Index())){
                 ans = true;
                 break;

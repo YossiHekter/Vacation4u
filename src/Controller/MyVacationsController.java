@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.Fly;
+import Model.Flight;
 import Model.IModel;
 import Model.Request;
 import javafx.collections.FXCollections;
@@ -10,15 +10,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 public class MyVacationsController implements Observer {
-
-    public ObservableList<Fly> list = FXCollections.observableArrayList();
-    public TableView<Fly> table;
+    public ObservableList<Flight> list = FXCollections.observableArrayList();
+    public TableView<Flight> table;
     public Button btn_exchange;
     private IModel model;
     public ChoiceBox txt_idxOfVacation;
@@ -114,7 +112,7 @@ public class MyVacationsController implements Observer {
 
     private boolean onList(String text) {
         boolean ans = false;
-        for( Fly f : this.list){
+        for( Flight f : this.list){
             if(text.equals(f.getVacation_Index())){
                 ans = true;
                 break;
@@ -201,27 +199,27 @@ public class MyVacationsController implements Observer {
         list = FXCollections.observableArrayList();
 
         //connect between col name and to his values
-        vac_idx.setCellValueFactory(new PropertyValueFactory<Fly,String>("Vacation_Index"));
-        user_name.setCellValueFactory(new PropertyValueFactory<Fly,String>("user_name"));
-        from.setCellValueFactory(new PropertyValueFactory<Fly,String>("from"));
-        to.setCellValueFactory(new PropertyValueFactory<Fly,String>("to"));
-        depart.setCellValueFactory(new PropertyValueFactory<Fly,String>("depart"));
-        return_date.setCellValueFactory(new PropertyValueFactory<Fly,String>("return_date"));
-        flight_company.setCellValueFactory(new PropertyValueFactory<Fly,String>("flight_comp"));
-        total_price.setCellValueFactory(new PropertyValueFactory<Fly,String>("price"));
-        num_of_tickets.setCellValueFactory(new PropertyValueFactory<Fly,String>("num_of_travelers"));
-        luggage.setCellValueFactory(new PropertyValueFactory<Fly,String>("luggage"));
-        ticket_type.setCellValueFactory(new PropertyValueFactory<Fly,String>("cabin_class"));
-        vac_type.setCellValueFactory(new PropertyValueFactory<Fly,String>("vac_type"));
-        sleep_included.setCellValueFactory(new PropertyValueFactory<Fly,String>("sleep_included"));
-        sleep_rank.setCellValueFactory(new PropertyValueFactory<Fly,String>("sleep_rank"));
+        vac_idx.setCellValueFactory(new PropertyValueFactory<Flight,String>("Vacation_Index"));
+        user_name.setCellValueFactory(new PropertyValueFactory<Flight,String>("user_name"));
+        from.setCellValueFactory(new PropertyValueFactory<Flight,String>("from"));
+        to.setCellValueFactory(new PropertyValueFactory<Flight,String>("to"));
+        depart.setCellValueFactory(new PropertyValueFactory<Flight,String>("depart"));
+        return_date.setCellValueFactory(new PropertyValueFactory<Flight,String>("return_date"));
+        flight_company.setCellValueFactory(new PropertyValueFactory<Flight,String>("flight_comp"));
+        total_price.setCellValueFactory(new PropertyValueFactory<Flight,String>("price"));
+        num_of_tickets.setCellValueFactory(new PropertyValueFactory<Flight,String>("num_of_travelers"));
+        luggage.setCellValueFactory(new PropertyValueFactory<Flight,String>("luggage"));
+        ticket_type.setCellValueFactory(new PropertyValueFactory<Flight,String>("cabin_class"));
+        vac_type.setCellValueFactory(new PropertyValueFactory<Flight,String>("vac_type"));
+        sleep_included.setCellValueFactory(new PropertyValueFactory<Flight,String>("sleep_included"));
+        sleep_rank.setCellValueFactory(new PropertyValueFactory<Flight,String>("sleep_rank"));
 
         //connect between the list and the table
         table.setItems(list);
         // add flights to list
-        ArrayList<Fly> flys = model.getVacationToDelete();
+        ArrayList<Flight> flys = model.getVacationToDelete();
         ArrayList<String> index = new ArrayList<String>();
-        for( Fly f : flys){
+        for( Flight f : flys){
             list.add(f);
             index.add(""+f.getVacation_Index());
         }

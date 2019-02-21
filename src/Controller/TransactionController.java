@@ -1,7 +1,7 @@
 package Controller;
 
 import Model.IModel;
-import Model.Payment;
+import Model.Transaction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -15,8 +15,8 @@ import java.util.Observer;
 public class TransactionController implements Observer {
 
     private IModel model;
-    public ObservableList<Payment> list = FXCollections.observableArrayList();
-    public TableView<Payment> table;
+    public ObservableList<Transaction> list = FXCollections.observableArrayList();
+    public TableView<Transaction> table;
 
 
     public void setModel(IModel model) {
@@ -64,21 +64,21 @@ public class TransactionController implements Observer {
         list = FXCollections.observableArrayList();
 
         //connect between col name and to his values
-        payment_idx.setCellValueFactory(new PropertyValueFactory<Payment,String>("payment_Index"));
-        seller.setCellValueFactory(new PropertyValueFactory<Payment,String>("seller"));
-        buyer.setCellValueFactory(new PropertyValueFactory<Payment,String>("buyer"));
-        price.setCellValueFactory(new PropertyValueFactory<Payment,String>("price"));
-        date.setCellValueFactory(new PropertyValueFactory<Payment,String>("date"));
-        type.setCellValueFactory(new PropertyValueFactory<Payment,String>("type"));
-        status.setCellValueFactory(new PropertyValueFactory<Payment,String>("status"));
+        payment_idx.setCellValueFactory(new PropertyValueFactory<Transaction,String>("payment_Index"));
+        seller.setCellValueFactory(new PropertyValueFactory<Transaction,String>("seller"));
+        buyer.setCellValueFactory(new PropertyValueFactory<Transaction,String>("buyer"));
+        price.setCellValueFactory(new PropertyValueFactory<Transaction,String>("price"));
+        date.setCellValueFactory(new PropertyValueFactory<Transaction,String>("date"));
+        type.setCellValueFactory(new PropertyValueFactory<Transaction,String>("type"));
+        status.setCellValueFactory(new PropertyValueFactory<Transaction,String>("status"));
 
         //connect between the list and the table
         table.setItems(list);
 
         // add transaction to list
-        ArrayList<Payment> payments = model.getMyTransactions();
-        for(Payment payment : payments){
-            list.add(payment);
+        ArrayList<Transaction> transactions = model.getMyTransactions();
+        for(Transaction transaction : transactions){
+            list.add(transaction);
         }
 
         // enter the cols to the table

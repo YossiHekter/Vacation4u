@@ -32,7 +32,6 @@ public class RUDController implements Observer{
     private VacationDeleteController vacationDeleteController;
     private MyRequestController myRequestController;
     private TransactionController transactionController;
-    private int numOfTrans;
 
     public javafx.scene.control.MenuBar menu;
     public javafx.scene.image.ImageView iv_about;
@@ -66,11 +65,11 @@ public class RUDController implements Observer{
             e.printStackTrace();
         }
         new_req_btn.setDisable(true);
-        if(model.getMyRequests()!=null)
+        if(model.getMyRequests().size()>0)
             new_req_btn.setDisable(false);
 
         new_trans_btn.setDisable(true);
-        if(model.getMyTransactions()!=null)
+        if(model.getMyTransactions().size()>0)
             new_trans_btn.setDisable(false);
     }
 
@@ -245,6 +244,7 @@ public class RUDController implements Observer{
     }
 
     public void showMyRequests() {
+        new_req_btn.setDisable(true);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             Parent root = fxmlLoader.load(getClass().getResource("/View/MyRequest.fxml").openStream());
@@ -335,6 +335,7 @@ public class RUDController implements Observer{
     }
 
     public void showMyTransactions() {
+        new_trans_btn.setDisable(true);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             Parent root = fxmlLoader.load(getClass().getResource("/View/MyTransactions.fxml").openStream());
@@ -366,12 +367,10 @@ public class RUDController implements Observer{
 
     public void NewRequest(){
         this.showMyRequests();
-        new_req_btn.setDisable(true);
     }
 
     public void NewTrans(){
         this.showMyTransactions();
-        new_trans_btn.setDisable(true);
     }
 
 }

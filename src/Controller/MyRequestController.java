@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.Fly;
+import Model.Flight;
 import Model.IModel;
 import Model.Request;
 import javafx.collections.FXCollections;
@@ -57,7 +57,7 @@ public class MyRequestController implements Observer {
 
                 //exchange window
                 exchange = true;
-                Fly flight = model.getVacationByIndex(Integer.parseInt(buyerVacIndex));
+                Flight flight = model.getVacationByIndex(Integer.parseInt(buyerVacIndex));
                 String from = flight.getFrom();
                 String to = flight.getTo();
                 String depart = flight.getDepart();
@@ -98,7 +98,6 @@ public class MyRequestController implements Observer {
                                 "rejected"};
                         model.makePayment(payment);
                         model.deleteRequest(reqIndex);
-                        requestsList.remove(Integer.parseInt(reqIndex)-1);
                     }
                     Stage prim = (Stage) this.btn_choose.getScene().getWindow();
                     prim.close();
@@ -112,7 +111,6 @@ public class MyRequestController implements Observer {
                                 "confirm"};
                         model.makePayment(payment);
                         model.deleteRequest(reqIndex);
-                        //requestsList.remove(Integer.parseInt(reqIndex)-1);
 
                         //exchange
                         //add another transaction, now the seller is the buyer
@@ -145,7 +143,6 @@ public class MyRequestController implements Observer {
                                     payment[6] = "rejected";
                                     model.makePayment(payment);
                                     model.deleteRequest(req.getRequest_Index());
-                                    //requestsList.remove(listIndex);
                                 }
                             }
 
@@ -274,7 +271,7 @@ public class MyRequestController implements Observer {
         for( Request req : this.requestsList) {
             if (index.equals(req.getRequest_Index())) {
                 vacation_Index = req.getSeller_vacation_Index();
-                Fly flight = model.getVacationByIndex(Integer.parseInt(vacation_Index));
+                Flight flight = model.getVacationByIndex(Integer.parseInt(vacation_Index));
                 LocalDate localDate = LocalDate.now();
                 ans[0] = req.getSeller(); //seller
                 ans[1] = req.getBuyer(); //buyer

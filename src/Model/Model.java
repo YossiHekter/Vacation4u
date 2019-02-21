@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Observable;
 
@@ -39,23 +38,10 @@ public class Model extends Observable implements IModel {
 
     }
 
-    public ArrayList<Payment> getMyTransactions() {
-        ArrayList<Payment> ans = new ArrayList<>();
+    public ArrayList<Transaction> getMyTransactions() {
+        ArrayList<Transaction> ans = new ArrayList<>();
         ans = db.getMyTransactions(this.user_name);
         return ans;
-    }
-
-    public void exchangeVacation(String otherUsr_VacatinIDX,String exchangeMe){
-        if(db.addToRequestsTable("REQUEST","Vacation_IDX",otherUsr_VacatinIDX,exchangeMe)) {
-            Object[] args = {"vacation added"};
-            setChanged();
-            notifyObservers(args);
-        }
-        else{
-            Object[] args = {"add vacation failed"};
-            setChanged();
-            notifyObservers(args);
-        }
     }
 
     @Override
@@ -241,15 +227,15 @@ public class Model extends Observable implements IModel {
     }
 
     @Override
-    public ArrayList<Fly>  getVacation(){
-        ArrayList<Fly> ans = new ArrayList<Fly>();
+    public ArrayList<Flight>  getVacation(){
+        ArrayList<Flight> ans = new ArrayList<Flight>();
         ans = db.getVacations();
         return ans;
     }
 
     @Override
-    public ArrayList<Fly>  getVacationToDelete(){
-        ArrayList<Fly> ans = new ArrayList<Fly>();
+    public ArrayList<Flight>  getVacationToDelete(){
+        ArrayList<Flight> ans = new ArrayList<Flight>();
         ans = db.getVacationToDelete(this.user_name);
         return ans;
     }
@@ -310,12 +296,12 @@ public class Model extends Observable implements IModel {
         }
     }
     @Override
-    public Fly getVacationByIndex(int index){
-        Fly flight = null;
-        ArrayList<Fly> list = getVacation();
+    public Flight getVacationByIndex(int index){
+        Flight flight = null;
+        ArrayList<Flight> list = getVacation();
         Iterator it = list.iterator();
         while (it.hasNext()) {
-            Fly f = (Fly) it.next();
+            Flight f = (Flight) it.next();
             if (Integer.parseInt(f.getVacation_Index()) == index) {
                 flight = f;
                 break;
@@ -325,10 +311,6 @@ public class Model extends Observable implements IModel {
     }
     public String getRequest_idx() {
         return db.getRequest_idx();
-    }
-
-    public void updateStatus(String status){
-        db.updateStatus(status);
     }
 
 }

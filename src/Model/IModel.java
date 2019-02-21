@@ -2,12 +2,12 @@ package Model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import Model.AUser;
 
 public interface IModel {
 
     void login(String userName , String userPassword);
     void signUp(String[] values);
-    boolean legalUserName(String userName);
     boolean legalPassword(String userPassword);
     boolean legalUserBirthday(LocalDate userBirthday);
     boolean legalVacationDate(LocalDate vacationDate);
@@ -18,22 +18,21 @@ public interface IModel {
     String getUser_name();
     void setUser_name(String user_name);
     ArrayList<String[]> bringDetailsOfUser (String user);
-    void exchangeVacation(String otherUsr_VacatinIDX,String exchangeMe);
     void createVacation(String[] values);
     String getVacation_idx();
     String getTransaction_idx();
     void deleteVacation(String deleteMe);
     void deleteRequest(String deleteMe);
-    ArrayList<Fly> getVacation();
-    Fly getVacationByIndex(int index);
-    ArrayList<Fly> getVacationToDelete();
+    ArrayList<Flight> getVacation();
+    Flight getVacationByIndex(int index);
+    ArrayList<Flight> getVacationToDelete();
     ArrayList<Request> getMyRequests();
     ArrayList<Request> getAllRequests();
     void makePayment(String[] values);
     String get_photo(String userName);
     String getRequest_idx();
     void addToRequestDB(String[] values);
-    ArrayList<Payment> getMyTransactions();
-    void updateStatus(String status);
+    ArrayList<Transaction> getMyTransactions();
+    boolean legalUserName(String userName);
 
 }
